@@ -21,7 +21,7 @@ const BACKEND_URL = 'http://localhost:3001'
     <img :class="$style['card-img']" :src="`${BACKEND_URL}/static/${photo}`" alt="card photo" />
     <div :class="$style['card-body']">
       <h3 class="h3-wide">{{ props.title }}</h3>
-      <p class="p3-regular">{{ props.content }}</p>
+      <p class="p3-regular" :class="$style['card-body-text']">{{ props.content }}</p>
     </div>
   </div>
 </template>
@@ -56,5 +56,14 @@ const BACKEND_URL = 'http://localhost:3001'
   width: 100%;
   height: 231px;
   object-fit: cover;
+}
+
+.card-body-text {
+  display: -webkit-box;
+  max-width: 100%;
+  -webkit-line-clamp: 8;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 </style>
