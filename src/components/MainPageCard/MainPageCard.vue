@@ -1,0 +1,59 @@
+<script setup lang="ts">
+import { defineProps, withDefaults } from 'vue'
+
+type MainPageCardProps = {
+  title: string
+  content: string
+  photo: string | null
+}
+
+const props = withDefaults(defineProps<MainPageCardProps>(), {
+  title: '',
+  content: '',
+  photo: null,
+})
+
+const BACKEND_URL = 'http://localhost:3001'
+</script>
+
+<template>
+  <div class="card-wrapper">
+    <img :class="$style['card-img']" :src="`${BACKEND_URL}/static/${photo}`" alt="card photo" />
+    <div :class="$style['card-body']">
+      <h3 class="h3-wide">{{ props.title }}</h3>
+      <p class="p3-regular">{{ props.content }}</p>
+    </div>
+  </div>
+</template>
+
+<style scoped>
+.card-wrapper {
+  height: 479px;
+  border-radius: 24px;
+  background-color: var(--color-lavender);
+  cursor: pointer;
+  transition: all ease-out 0.2s;
+  overflow: hidden;
+}
+
+.card-wrapper:hover {
+  box-shadow: var(--shadow-medium);
+  transition: all ease-in 0.2s;
+}
+</style>
+
+<style module>
+.card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 24px;
+  color: var(--color-text-primary);
+  align-items: center;
+}
+
+.card-img {
+  width: auto;
+  max-height: 231px;
+}
+</style>

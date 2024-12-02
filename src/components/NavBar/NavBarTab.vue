@@ -10,12 +10,12 @@ type HeaderProps = {
 const props = withDefaults(defineProps<HeaderProps>(), {
   title: '',
   active: false,
-  link: '#',
+  link: '/',
 })
 </script>
 
 <template>
-  <router-link :to="link" :class="$style['header-tab']">
+  <router-link :to="link" :class="$style['header-tab']" class="h4-wide">
     {{ title }}
     <div
       :class="{
