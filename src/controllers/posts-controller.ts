@@ -1,8 +1,9 @@
 import { usePostStore } from '@/store/post'
+import type { NextTick } from '@/types/controller'
 import type { Post } from '@/types/post'
 
 export class PostsController {
-  private nextTick: any = () => Promise.resolve()
+  private nextTick: NextTick = () => Promise.resolve()
   postsStore = usePostStore()
   posts: Post[] = []
 
@@ -10,7 +11,7 @@ export class PostsController {
     return new this()
   }
 
-  async mount(nextTick: any) {
+  async mount(nextTick: NextTick) {
     this.nextTick = nextTick
 
     await this.postsStore.fetchPosts()
