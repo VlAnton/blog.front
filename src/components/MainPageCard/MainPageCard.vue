@@ -53,7 +53,8 @@ const BACKEND_URL = 'http://localhost:3001'
 }
 
 .card-img {
-  width: auto;
-  max-height: 231px;
+  width: 100%;
+  height: 231px;
+  object-fit: cover;
 }
 </style>
