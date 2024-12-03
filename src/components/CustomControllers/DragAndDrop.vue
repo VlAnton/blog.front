@@ -1,8 +1,24 @@
 <script setup lang="ts">
-import { ref } from 'vue'
 import { QIcon } from 'quasar'
+import { computed, defineEmits, defineProps, ref } from 'vue'
 
-const file = ref<File | null>(null)
+type DragAndDropProps = {
+  modelValue: File | null
+}
+const props = defineProps<DragAndDropProps>()
+const emit = defineEmits({
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  'update:modelValue': (value: string) => true,
+})
+const file = computed({
+  get() {
+    return props.modelValue
+  },
+  set(newVal: File | null) {
+    emit('update:modelValue', newVal as unknown as string)
+  },
+})
+
 const fileInput = ref(null)
 const isDragging = ref(false)
 

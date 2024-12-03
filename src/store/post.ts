@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import type { Post, PostState } from '@/types/post'
+import type { Post, PostCandidate, PostState } from '@/types/post'
 import axios from 'axios'
 
 export const usePostStore = defineStore('post', {
@@ -25,6 +25,19 @@ export const usePostStore = defineStore('post', {
       if (response) {
         this.postsTotal = response.data
       }
+    },
+    async createPost(post: PostCandidate) {
+      const formData = new FormData()
+      formData.append('title', post.title)
+      formData.append('content', post.content)
+      if (post.photo) {
+        formData.append('photo', post.photo as Blob)
+      }
+      formData.append('isPublished', 'false')
+      const response = await axios.post('http://localhost:3001/api/posts/', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+      console.log(response)
     },
   },
 

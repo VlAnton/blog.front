@@ -1,6 +1,6 @@
 import { usePostStore } from '@/store/post'
 import type { NextTick } from '@/types/controller'
-import type { Post } from '@/types/post'
+import type { Post, PostCandidate } from '@/types/post'
 
 export class PostsController {
   private nextTick: NextTick = () => Promise.resolve()
@@ -24,5 +24,9 @@ export class PostsController {
   async goToNextPage(currentPageNo: number) {
     await this.postsStore.fetchPosts((currentPageNo - 1) * 6)
     this.posts = this.postsStore.posts
+  }
+
+  async createPost(post: PostCandidate) {
+    await this.postsStore.createPost(post)
   }
 }

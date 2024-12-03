@@ -1,11 +1,27 @@
 <script setup lang="ts">
-import { ref } from 'vue'
-import { QForm } from 'quasar'
+import { ref, reactive, onMounted, nextTick } from 'vue'
+import { QForm, QBtn } from 'quasar'
 import CustomInput from '@/components/CustomControllers/CustomInput.vue'
 import DragAndDrop from '@/components/CustomControllers/DragAndDrop.vue'
+import { PostsController } from '@/controllers/posts-controller'
+
+const controller = reactive(PostsController.create())
+
+onMounted(() => {
+  controller.mount(nextTick)
+})
 
 const postTitle = ref('')
 const postContent = ref('')
+const postFile = ref(null)
+
+const onSubmit = () => {
+  controller.createPost({
+    title: postTitle.value,
+    content: postContent.value,
+    photo: postFile.value,
+  })
+}
 </script>
 
 <template>
@@ -15,7 +31,7 @@ const postContent = ref('')
     </div>
 
     <div :class="$style['page-body']">
-      <q-form type="submit" :class="$style['left-part']">
+      <q-form type="submit" :class="$style['left-part']" @submit="onSubmit">
         <custom-input
           v-model="postTitle"
           custom-label="Название поста"
@@ -29,7 +45,8 @@ const postContent = ref('')
           type="textarea"
           on-white-background
         />
-        <drag-and-drop />
+        <drag-and-drop v-model="postFile" />
+        <q-btn :disable="!postTitle || !postContent" type="submit">Создать пост</q-btn>
       </q-form>
     </div>
   </div>
