@@ -30,7 +30,7 @@ const BACKEND_URL = 'http://localhost:3001'
 .card-wrapper {
   height: 479px;
   border-radius: 24px;
-  background-color: var(--color-lavender);
+  background-color: var(--color-lavender-shallow);
   cursor: pointer;
   transition: all ease-out 0.2s;
   overflow: hidden;

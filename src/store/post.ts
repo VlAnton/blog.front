@@ -5,13 +5,26 @@ import axios from 'axios'
 export const usePostStore = defineStore('post', {
   state: (): PostState => ({
     posts: [],
+    postsTotal: 0,
   }),
 
   actions: {
-    async fetchPosts() {
-      const response = await axios.get('http://localhost:3001/api/posts')
+    async fetchPosts(offset: number = 0) {
+      console.log(offset)
+      const response = await axios.get('http://localhost:3001/api/posts', {
+        params: {
+          limit: 6,
+          offset,
+        },
+      })
       if (response) {
         this.posts = response.data
+      }
+    },
+    async fetchPostsTotal() {
+      const response = await axios.get('http://localhost:3001/api/posts/count')
+      if (response) {
+        this.postsTotal = response.data
       }
     },
   },

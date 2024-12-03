@@ -7,4 +7,5 @@ export type Post = {
 
 export type PostState = {
   posts: Post[]
+  postsTotal: number
 }

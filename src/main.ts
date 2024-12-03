@@ -24,9 +24,6 @@ app.use(Quasar, {
     Loading,
   },
   lang: quasarLang,
-  config: {
-    animations: 'all',
-  },
 })
 
 app.mount('#app')

@@ -1,11 +1,20 @@
 <script setup lang="ts">
 import MainPageCard from '@/components/MainPageCard/MainPageCard.vue'
+import { QPagination } from 'quasar'
 import { PostsController } from '@/controllers/posts-controller'
-import { nextTick, onMounted, reactive } from 'vue'
+import { nextTick, onMounted, reactive, ref, watch } from 'vue'
+
 const controller = reactive(PostsController.create())
+const page = ref(1)
 
 onMounted(() => {
   controller.mount(nextTick)
+})
+
+watch(page, () => {
+  nextTick(() => {
+    controller.goToNextPage(page.value)
+  })
 })
 // onBeforeUnmount(() => {
 //   controller.unmount()
@@ -30,6 +39,22 @@ onMounted(() => {
         :photo="post.photo"
       />
     </div>
+
+    <div :class="$style['pagination-wrapper']">
+      <q-pagination
+        v-model="page"
+        active-color="white"
+        active-text-color="white"
+        text-color="black"
+        color="black"
+        size="20px"
+        :max="Math.ceil(controller.postsTotal / 6)"
+        gutter="16px"
+        :ripple="false"
+        boundary-numbers
+        direction-links
+      />
+    </div>
   </div>
 </template>
 
@@ -38,6 +63,35 @@ onMounted(() => {
   flex-basis: calc(33% - 19px);
   flex-shrink: 0;
 }
+
+:deep(.q-pagination) {
+  padding: 24px;
+  background-color: var(--color-lavender);
+  border-radius: 100px;
+  box-shadow: var(--shadow-medium);
+  place-content: center;
+}
+
+:deep(.disabled) {
+  visibility: hidden !important;
+}
+
+:deep(.q-pagination__middle .q-btn) {
+  border-radius: 100px;
+  background-color: #fff;
+  font:
+    500 20px/35px ALS Gorizont,
+    sans-serif;
+}
+
+:deep(.bg-white) {
+  background-color: var(--color-lavender-accent) !important;
+}
+
+:deep(.q-focus-helper) {
+  opacity: 0 !important;
+  background-color: transparent !important;
+}
 </style>
 
 <style module>
@@ -45,6 +99,12 @@ onMounted(() => {
   display: flex;
   gap: 32px;
   flex-wrap: wrap;
-  padding: 40px 48px 168px;
+  padding: 40px 48px;
+}
+
+.pagination-wrapper {
+  position: sticky;
+  bottom: 40px;
+  padding: 0 48px;
 }
 </style>
