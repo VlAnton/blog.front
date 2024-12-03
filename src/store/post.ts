@@ -10,7 +10,6 @@ export const usePostStore = defineStore('post', {
 
   actions: {
     async fetchPosts(offset: number = 0) {
-      console.log(offset)
       const response = await axios.get('http://localhost:3001/api/posts', {
         params: {
           limit: 6,
