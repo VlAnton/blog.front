@@ -62,6 +62,7 @@ const BACKEND_URL = 'http://localhost:3001'
   display: -webkit-box;
   max-width: 100%;
   -webkit-line-clamp: 8;
+  line-clamp: 8;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;

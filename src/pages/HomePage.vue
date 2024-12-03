@@ -13,8 +13,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div :class="$style.page">
-    <div :class="$style['page-header']">
+  <div class="page">
+    <div class="page-header">
       <h1 class="h1-wide">Главная</h1>
       <p class="p1-regular">
         Здесь располагаются мои посты, вы можете их читать или не читать, как хотите
@@ -41,23 +41,6 @@ onMounted(() => {
 </style>
 
 <style module>
-.page {
-  background-color: #fff;
-  display: flex;
-  flex-direction: column;
-  gap: 40px;
-}
-
-.page-header {
-  background-color: var(--color-lavender);
-  padding: 8px 48px 48px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  align-items: center;
-  color: var(--color-text-primary);
-}
-
 .page-body {
   display: flex;
   gap: 32px;

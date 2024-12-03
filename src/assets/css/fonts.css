@@ -13,26 +13,31 @@
 
 .p1-regular {
   font: 300 20px/23px Helvetica;
+  margin: 0;
 }
 
 .p3-regular {
   font: 300 15px/17px Helvetica;
+  margin: 0;
 }
 
 .h1-wide {
   font:
     500 35px/35px ALS Gorizont,
     sans-serif;
+  margin: 0;
 }
 
 .h3-wide {
   font:
     500 20px/20px ALS Gorizont,
     sans-serif;
+  margin: 0;
 }
 
 .h4-wide {
   font:
     500 15px/15px ALS Gorizont,
     sans-serif;
+  margin: 0;
 }
