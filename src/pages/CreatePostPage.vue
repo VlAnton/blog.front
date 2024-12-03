@@ -2,7 +2,10 @@
 import { ref } from 'vue'
 import { QForm } from 'quasar'
 import CustomInput from '@/components/CustomControllers/CustomInput.vue'
+import DragAndDrop from '@/components/CustomControllers/DragAndDrop.vue'
+
 const postTitle = ref('')
+const postContent = ref('')
 </script>
 
 <template>
@@ -13,7 +16,20 @@ const postTitle = ref('')
 
     <div :class="$style['page-body']">
       <q-form type="submit" :class="$style['left-part']">
-        <custom-input v-model="postTitle" custom-label="Название поста" clearable></custom-input>
+        <custom-input
+          v-model="postTitle"
+          custom-label="Название поста"
+          clearable
+          on-white-background
+        />
+        <custom-input
+          v-model="postContent"
+          custom-label="Текст поста"
+          clearable
+          type="textarea"
+          on-white-background
+        />
+        <drag-and-drop />
       </q-form>
     </div>
   </div>
