@@ -21,4 +21,11 @@ import NavBar from './components/NavBar/NavBar.vue'
   align-items: center;
   color: var(--color-text-primary);
 }
+
+.page {
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
 </style>
