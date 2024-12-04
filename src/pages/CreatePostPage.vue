@@ -22,6 +22,13 @@ const onSubmit = () => {
     photo: postFile.value,
   })
 }
+
+const getFilePreviewUrl = (file: File | null) => {
+  if (!file) {
+    return ''
+  }
+  return URL.createObjectURL(file)
+}
 </script>
 
 <template>
@@ -31,7 +38,8 @@ const onSubmit = () => {
     </div>
 
     <div :class="$style['page-body']">
-      <q-form type="submit" :class="$style['left-part']" @submit="onSubmit">
+      <q-form type="submit" :class="$style['creation-form']" @submit="onSubmit">
+        <drag-and-drop v-model="postFile" />
         <custom-input
           v-model="postTitle"
           custom-label="Название поста"
@@ -45,22 +53,50 @@ const onSubmit = () => {
           type="textarea"
           on-white-background
         />
-        <drag-and-drop v-model="postFile" />
         <q-btn :disable="!postTitle || !postContent" type="submit">Создать пост</q-btn>
       </q-form>
+
+      <div :class="$style.preview">
+        <img v-if="postFile" :class="$style['post-photo']" :src="getFilePreviewUrl(postFile)" />
+        <h1 class="h1-wide">
+          {{ postTitle }}
+        </h1>
+        <p class="p1-regular">
+          {{ postContent }}
+        </p>
+      </div>
     </div>
   </div>
 </template>
 
 <style module>
-.left-part {
+.creation-form {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  max-width: 451px;
+  min-width: 451px;
 }
 
 .page-body {
   padding: 0 48px;
+  display: flex;
+  gap: 32px;
+}
+
+.preview {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 24px;
+  border-radius: 24px;
+  background-color: var(--color-lavender-shallow);
+}
+
+.post-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 24px;
 }
 </style>

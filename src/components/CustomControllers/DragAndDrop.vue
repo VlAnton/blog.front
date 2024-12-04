@@ -5,6 +5,7 @@ import { computed, defineEmits, defineProps, ref } from 'vue'
 type DragAndDropProps = {
   modelValue: File | null
 }
+
 const props = defineProps<DragAndDropProps>()
 const emit = defineEmits({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -22,29 +23,32 @@ const file = computed({
 const fileInput = ref(null)
 const isDragging = ref(false)
 
-const handleDragOver = (e) => {
+const handleDragOver = (e: any) => {
   e.preventDefault()
   e.stopPropagation()
   isDragging.value = true
 }
 
-const handleDragLeave = (e) => {
+const handleDragLeave = (e: any) => {
   e.preventDefault()
   e.stopPropagation()
   isDragging.value = false
 }
 
-const handleDrop = (e) => {
+const handleDrop = (e: any) => {
   e.preventDefault()
   e.stopPropagation()
   isDragging.value = false
-
-  const newFile = e.dataTransfer.files[0]
-  handleFile(newFile)
+  if (e.dataTransfer) {
+    const newFile = e.dataTransfer.files[0]
+    handleFile(newFile)
+  }
 }
 
-const handleFileSelect = (e) => {
-  handleFile(e.target.files[0])
+const handleFileSelect = (e: any) => {
+  if (e.target && e.target.files) {
+    handleFile(e.target.files[0])
+  }
 }
 
 const handleFile = (newFile: File) => {
@@ -77,7 +81,7 @@ const handleFile = (newFile: File) => {
 .drop-zone-wrapper {
   padding: 10px 16px;
   border-radius: 12px;
-  height: 100px;
+  height: 83px;
   border: 1px solid var(--color-lavender);
   background-color: var(--color-lavender-shallow);
   transition: border-color ease-out 0.2s;
