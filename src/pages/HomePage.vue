@@ -31,13 +31,7 @@ watch(page, () => {
     </div>
 
     <div :class="$style['page-body']">
-      <main-page-card
-        v-for="post in controller.posts"
-        :key="post.id"
-        :title="post.title"
-        :content="post.content"
-        :photo="post.photo"
-      />
+      <main-page-card v-for="post in controller.posts" :key="post.id" :post="post" />
     </div>
 
     <div :class="$style['pagination-wrapper']">

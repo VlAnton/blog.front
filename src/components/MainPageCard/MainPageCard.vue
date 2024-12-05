@@ -1,27 +1,38 @@
 <script setup lang="ts">
-import { defineProps, withDefaults } from 'vue'
+import { BACKEND_URL } from '@/constants/env'
+import type { Post } from '@/types/post'
+import { defineProps } from 'vue'
+import { useRouter } from 'vue-router'
 
 type MainPageCardProps = {
-  title: string
-  content: string
-  photo: string | null
+  post: Post
 }
 
-const props = withDefaults(defineProps<MainPageCardProps>(), {
-  title: '',
-  content: '',
-  photo: null,
-})
+const $router = useRouter()
+const props = defineProps<MainPageCardProps>()
 
-const BACKEND_URL = 'http://localhost:3001'
+const onClick = () => {
+  const { id } = props.post
+  $router.push({
+    name: 'post',
+    params: {
+      id,
+    },
+  })
+}
 </script>
 
 <template>
-  <div class="card-wrapper">
-    <img :class="$style['card-img']" :src="`${BACKEND_URL}/static/${photo}`" alt="card photo" />
+  <div class="card-wrapper" @click="onClick">
+    <img
+      v-if="props.post.photo"
+      :class="$style['card-img']"
+      :src="`${BACKEND_URL}/static/${props.post.photo}`"
+      alt="card photo"
+    />
     <div :class="$style['card-body']">
-      <h3 class="h3-wide">{{ props.title }}</h3>
-      <p class="p3-regular" :class="$style['card-body-text']">{{ props.content }}</p>
+      <h3 class="h3-wide">{{ props.post.title }}</h3>
+      <p class="p3-regular" :class="$style['card-body-text']">{{ props.post.content }}</p>
     </div>
   </div>
 </template>

@@ -6,6 +6,10 @@ type DragAndDropProps = {
   modelValue: File | null
 }
 
+interface HTMLInputEvent extends Event {
+  target: HTMLInputElement & EventTarget
+}
+
 const props = defineProps<DragAndDropProps>()
 const emit = defineEmits({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -23,19 +27,19 @@ const file = computed({
 const fileInput = ref(null)
 const isDragging = ref(false)
 
-const handleDragOver = (e: any) => {
+const handleDragOver = (e: DragEvent) => {
   e.preventDefault()
   e.stopPropagation()
   isDragging.value = true
 }
 
-const handleDragLeave = (e: any) => {
+const handleDragLeave = (e: DragEvent) => {
   e.preventDefault()
   e.stopPropagation()
   isDragging.value = false
 }
 
-const handleDrop = (e: any) => {
+const handleDrop = (e: DragEvent) => {
   e.preventDefault()
   e.stopPropagation()
   isDragging.value = false
@@ -45,7 +49,7 @@ const handleDrop = (e: any) => {
   }
 }
 
-const handleFileSelect = (e: any) => {
+const handleFileSelect = (e: HTMLInputEvent) => {
   if (e.target && e.target.files) {
     handleFile(e.target.files[0])
   }

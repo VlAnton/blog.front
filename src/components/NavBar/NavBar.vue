@@ -71,6 +71,7 @@ onUnmounted(() => {
 .header {
   position: sticky;
   top: 0;
+  z-index: 1;
 
   padding: 24px 48px;
   background-color: var(--color-lavender);

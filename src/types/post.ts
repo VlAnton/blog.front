@@ -1,8 +1,11 @@
+import type { PostBlock } from './post-block'
+
 export type Post = {
-  id: number
+  id?: number
   title: string
   content: string
   photo: string | null
+  isPublished?: boolean
 }
 
 export type PostCandidate = {
@@ -11,7 +14,10 @@ export type PostCandidate = {
   photo: File | null
 }
 
+export type PostData = Record<string, Post | PostBlock[] | null>
+
 export type PostState = {
   posts: Post[]
   postsTotal: number
+  currentPostData: PostData
 }
