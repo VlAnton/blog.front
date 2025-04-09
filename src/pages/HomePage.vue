@@ -2,7 +2,7 @@
 import MainPageCard from '@/components/MainPageCard/MainPageCard.vue'
 import { QPagination } from 'quasar'
 import { PostsController } from '@/controllers/posts-controller'
-import { nextTick, onMounted, reactive, ref, watch } from 'vue'
+import { nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
 
 const controller = reactive(PostsController.create())
 const page = ref(1)
@@ -16,9 +16,9 @@ watch(page, () => {
     controller.goToNextPage(page.value)
   })
 })
-// onBeforeUnmount(() => {
-//   controller.unmount()
-// })
+onUnmounted(() => {
+  controller.unmount()
+})
 </script>
 
 <template>

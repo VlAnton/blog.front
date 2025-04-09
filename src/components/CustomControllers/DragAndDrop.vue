@@ -45,18 +45,38 @@ const handleDrop = (e: DragEvent) => {
   isDragging.value = false
   if (e.dataTransfer) {
     const newFile = e.dataTransfer.files[0]
-    handleFile(newFile)
+    compressAndSetFile(newFile, 0.5)
   }
 }
 
 const handleFileSelect = (e: HTMLInputEvent) => {
   if (e.target && e.target.files) {
-    handleFile(e.target.files[0])
+    compressAndSetFile(e.target.files[0], 0.5)
   }
 }
 
-const handleFile = (newFile: File) => {
-  file.value = newFile.type.startsWith('image/') ? newFile : file.value
+const compressAndSetFile = async (newFile: File, quality = 1) => {
+  if (!newFile.type.startsWith('image/')) {
+    return
+  }
+  const imageBitmap = await createImageBitmap(newFile)
+  // Draw to canvas
+  const canvas = document.createElement('canvas')
+  canvas.width = imageBitmap.width
+  canvas.height = imageBitmap.height
+  const ctx = canvas.getContext('2d')
+  if (!ctx) {
+    return
+  }
+  ctx!.drawImage(imageBitmap, 0, 0)
+
+  // Turn into Blob
+  const blob = await new Promise((resolve) => canvas.toBlob(resolve, newFile.type, quality))
+
+  // Turn Blob into File
+  file.value = new File([blob], newFile.name, {
+    type: blob.type,
+  })
 }
 </script>
 

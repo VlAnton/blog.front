@@ -23,8 +23,13 @@ export class PostsController {
 
     await this.postsStore.fetchPosts()
     await this.postsStore.fetchPostsTotal()
+    this.postsStore.connectWebSocket()
     this.posts = this.postsStore.posts
     this.postsTotal = this.postsStore.postsTotal
+  }
+
+  unmount() {
+    this.postsStore.socket?.close()
   }
 
   async getPostById(postId: string) {
