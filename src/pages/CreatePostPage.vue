@@ -2,6 +2,7 @@
 import { ref, reactive, onMounted, nextTick } from 'vue'
 import { QForm, QBtn } from 'quasar'
 import CustomInput from '@/components/CustomControllers/CustomInput.vue'
+import CustomButton from '@/components/CustomControllers/CustomButton.vue'
 import DragAndDrop from '@/components/CustomControllers/DragAndDrop.vue'
 import { PostsController } from '@/controllers/posts-controller'
 import type { PostBlock, PostBlockCandidate } from '@/types/post-block'
@@ -68,7 +69,9 @@ const getFilePreviewUrl = (file: File | null) => {
             type="textarea"
             on-white-background
           />
-          <q-btn :disable="!postTitle || !postContent" type="submit">Создать пост</q-btn>
+          <custom-button :disable="!postTitle || !postContent" type="submit">
+            Создать пост
+          </custom-button>
           <q-btn
             v-if="!postBlocks.length"
             :disable="!postTitle || !postContent"
