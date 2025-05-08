@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, nextTick } from 'vue'
-import { QForm, QBtn } from 'quasar'
+import { QForm } from 'quasar'
 import CustomInput from '@/components/CustomControllers/CustomInput.vue'
 import CustomButton from '@/components/CustomControllers/CustomButton.vue'
 import DragAndDrop from '@/components/CustomControllers/DragAndDrop.vue'
