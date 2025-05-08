@@ -14,7 +14,10 @@ export type PostCandidate = {
   photo: File | null
 }
 
-export type PostData = Record<string, Post | PostBlock[] | null>
+export type PostData = {
+  post: Post | null
+  postBlocks: PostBlock[]
+}
 
 export type PostState = {
   posts: Post[]
