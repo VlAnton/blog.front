@@ -5,7 +5,7 @@ import CustomInput from '@/components/CustomControllers/CustomInput.vue'
 import CustomButton from '@/components/CustomControllers/CustomButton.vue'
 import DragAndDrop from '@/components/CustomControllers/DragAndDrop.vue'
 import { PostsController } from '@/controllers/posts-controller'
-import type { PostBlock, PostBlockCandidate } from '@/types/post-block'
+import type { PostBlockCandidate } from '@/types/post-block'
 
 const controller = reactive(PostsController.create())
 
@@ -16,7 +16,7 @@ onMounted(() => {
 const postTitle = ref('')
 const postContent = ref('')
 const postFile = ref(null)
-const postBlocks = ref<PostBlock[]>([])
+const postBlocks = reactive<PostBlockCandidate[]>([])
 
 const onSubmitPost = () => {
   controller.createPost({
@@ -31,7 +31,7 @@ const onSubmitPostBlock = (postBlock: PostBlockCandidate) => {
 }
 
 const onAddNewBlock = () => {
-  postBlocks.value.push({
+  postBlocks.push({
     title: '',
     content: '',
     photo: null,
@@ -69,23 +69,30 @@ const getFilePreviewUrl = (file: File | null) => {
             type="textarea"
             on-white-background
           />
-          <custom-button :disable="!postTitle || !postContent" type="submit">
+          <custom-button
+            :disable="!postTitle || !postContent"
+            type="submit"
+            align="left"
+            icon="add"
+          >
             Создать пост
           </custom-button>
-          <q-btn
-            v-if="!postBlocks.length"
+          <custom-button
             :disable="!postTitle || !postContent"
+            align="left"
+            icon="add"
+            color="var(--color-lavender)"
             @click="onAddNewBlock"
           >
             Добавить новый блок
-          </q-btn>
+          </custom-button>
         </q-form>
         <q-form
           v-for="(postBlock, index) in postBlocks"
           :key="index"
           type="submit"
           :class="$style['creation-form']"
-          @submit="onSubmitPostBlock"
+          @submit="onSubmitPostBlock(postBlock)"
         >
           <drag-and-drop v-model="postBlock.photo" />
           <custom-input
@@ -101,19 +108,23 @@ const getFilePreviewUrl = (file: File | null) => {
             type="textarea"
             on-white-background
           />
-          <q-btn
+          <custom-button
             :disable="!postBlock.title || !postBlock.content"
             @click="onSubmitPostBlock(postBlock)"
+            align="left"
           >
             Создать блок
-          </q-btn>
-          <q-btn
+          </custom-button>
+          <custom-button
             v-if="!postBlocks[index + 1]"
             :disable="!postBlock.title || !postBlock.content"
+            align="left"
+            icon="add"
+            color="var(--color-lavender)"
             @click="onAddNewBlock"
           >
             Добавить новый блок
-          </q-btn>
+          </custom-button>
         </q-form>
       </div>
 
