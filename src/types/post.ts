@@ -10,7 +10,7 @@ export type Post = {
 
 export type PostCandidate = {
   title: string
-  content: string
+  content: string | Promise<string>
   photo: File | null
 }
 

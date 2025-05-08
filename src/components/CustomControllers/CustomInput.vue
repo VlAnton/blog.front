@@ -10,10 +10,7 @@ type InputProps = {
 
 const props = defineProps<InputProps>()
 
-const emit = defineEmits({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  'update:modelValue': (value: string) => true,
-})
+const emit = defineEmits(['update:modelValue'])
 
 const value = computed({
   get() {

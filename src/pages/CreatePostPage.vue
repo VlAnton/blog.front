@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted, nextTick } from 'vue'
 import { QForm } from 'quasar'
+import { marked } from 'marked'
+import DOMPurify from 'dompurify'
 import CustomInput from '@/components/CustomControllers/CustomInput.vue'
 import CustomButton from '@/components/CustomControllers/CustomButton.vue'
 import DragAndDrop from '@/components/CustomControllers/DragAndDrop.vue'
@@ -18,16 +20,23 @@ const postContent = ref('')
 const postFile = ref(null)
 const postBlocks = reactive<PostBlockCandidate[]>([])
 
-const onSubmitPost = () => {
-  controller.createPost({
-    title: postTitle.value,
-    content: postContent.value,
-    photo: postFile.value,
-  })
+const getCompiledMarkdown = (text: string) => {
+  return DOMPurify.sanitize(marked.parse(text) as string)
 }
 
-const onSubmitPostBlock = (postBlock: PostBlockCandidate) => {
-  controller.addPostBlock(postBlock)
+const onSubmitPost = () => {
+  controller.createPost(
+    {
+      title: postTitle.value,
+      content: getCompiledMarkdown(postContent.value),
+      photo: postFile.value,
+    },
+    postBlocks.map((block: PostBlockCandidate) => ({
+      title: block.title,
+      content: getCompiledMarkdown(block.content as string),
+      photo: block.photo,
+    })),
+  )
 }
 
 const onAddNewBlock = () => {
@@ -78,6 +87,7 @@ const getFilePreviewUrl = (file: File | null) => {
             Создать пост
           </custom-button>
           <custom-button
+            v-if="postBlocks.length === 0"
             :disable="!postTitle || !postContent"
             align="left"
             icon="add"
@@ -92,7 +102,6 @@ const getFilePreviewUrl = (file: File | null) => {
           :key="index"
           type="submit"
           :class="$style['creation-form']"
-          @submit="onSubmitPostBlock(postBlock)"
         >
           <drag-and-drop v-model="postBlock.photo" />
           <custom-input
@@ -102,19 +111,12 @@ const getFilePreviewUrl = (file: File | null) => {
             on-white-background
           />
           <custom-input
-            v-model="postBlock.content"
+            v-model="postBlock.content as string"
             custom-label="Текст поста"
             clearable
             type="textarea"
             on-white-background
           />
-          <custom-button
-            :disable="!postBlock.title || !postBlock.content"
-            @click="onSubmitPostBlock(postBlock)"
-            align="left"
-          >
-            Создать блок
-          </custom-button>
           <custom-button
             v-if="!postBlocks[index + 1]"
             :disable="!postBlock.title || !postBlock.content"
@@ -134,9 +136,7 @@ const getFilePreviewUrl = (file: File | null) => {
           <h1 class="h1-wide">
             {{ postTitle }}
           </h1>
-          <p class="p1-regular">
-            {{ postContent }}
-          </p>
+          <div class="p1-regular" v-html="getCompiledMarkdown(postContent)"></div>
         </div>
         <div
           v-for="(postBlock, index) in postBlocks"
@@ -151,9 +151,7 @@ const getFilePreviewUrl = (file: File | null) => {
           <h1 class="h1-wide">
             {{ postBlock.title }}
           </h1>
-          <p class="p1-regular">
-            {{ postBlock.content }}
-          </p>
+          <p class="p1-regular" v-html="getCompiledMarkdown(postBlock.content as string)"></p>
         </div>
       </div>
     </div>

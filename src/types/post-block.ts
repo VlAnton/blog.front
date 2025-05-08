@@ -8,7 +8,7 @@ export type PostBlock = {
 
 export type PostBlockCandidate = {
   title: string
-  content: string
+  content: string | Promise<string>
   photo: File | null
 }
 
