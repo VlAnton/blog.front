@@ -33,7 +33,7 @@ onMounted(async () => {
             alt="card photo"
           />
           <h1 class="h1-wide">{{ postData.post?.title }}</h1>
-          <p class="p1-regular">{{ postData.post?.content }}</p>
+          <p class="p1-regular" v-html="postData.post?.content"></p>
         </section>
         <section
           v-for="postBlock in postData.postBlocks"
@@ -47,7 +47,7 @@ onMounted(async () => {
             alt="card photo"
           />
           <h1 class="h1-wide">{{ postBlock?.title }}</h1>
-          <p class="p1-regular">{{ postBlock?.content }}</p>
+          <p class="p1-regular" v-html="postBlock.content"></p>
         </section>
       </div>
     </div>

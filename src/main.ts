@@ -9,9 +9,14 @@ import '@/assets/css/main.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import { marked } from 'marked'
 
 import App from './App.vue'
 import router from './router'
+
+marked.setOptions({
+  breaks: true,
+})
 
 const app = createApp(App)
 

@@ -42,11 +42,10 @@ export class PostsController {
     this.posts = this.postsStore.posts
   }
 
-  async createPost(post: PostCandidate) {
+  async createPost(post: PostCandidate, postBlocks: PostBlockCandidate[]) {
     this.postInCreation = (await this.postsStore.createPost(post)).data || null
-  }
-
-  async addPostBlock(postBlock: PostBlockCandidate) {
-    await this.postsStore.createPostBlock(postBlock, this.postInCreation?.id)
+    postBlocks.forEach((postBlock) => {
+      this.postsStore.createPostBlock(postBlock, this.postInCreation?.id)
+    })
   }
 }

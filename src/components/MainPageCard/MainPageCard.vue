@@ -32,7 +32,7 @@ const onClick = () => {
     />
     <div :class="$style['card-body']">
       <h3 class="h3-wide">{{ props.post.title }}</h3>
-      <p class="p3-regular" :class="$style['card-body-text']">{{ props.post.content }}</p>
+      <p class="p3-regular" :class="$style['card-body-text']" v-html="props.post.content"></p>
     </div>
   </div>
 </template>
