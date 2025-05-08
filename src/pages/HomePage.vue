@@ -3,6 +3,7 @@ import MainPageCard from '@/components/MainPageCard/MainPageCard.vue'
 import { QPagination } from 'quasar'
 import { PostsController } from '@/controllers/posts-controller'
 import { nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
+import CustomButton from '@/components/CustomControllers/CustomButton.vue'
 
 const controller = reactive(PostsController.create())
 const page = ref(1)
@@ -16,6 +17,7 @@ watch(page, () => {
     controller.goToNextPage(page.value)
   })
 })
+
 onUnmounted(() => {
   controller.unmount()
 })
@@ -28,6 +30,7 @@ onUnmounted(() => {
       <p class="p1-regular">
         Здесь располагаются мои посты, вы можете их читать или не читать, как хотите
       </p>
+      <CustomButton size="lg" icon="add" to="/create">Создать пост</CustomButton>
     </div>
 
     <div :class="$style['page-body']">

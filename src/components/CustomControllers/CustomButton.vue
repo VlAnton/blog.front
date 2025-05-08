@@ -43,7 +43,7 @@ const iconColor = computed(() => {
 
 <style module>
 .icon-wrapper {
-  border-radius: 100px;
+  border-radius: 100%;
   background-color: v-bind(iconWrapperColor);
 }
 
@@ -54,7 +54,7 @@ const iconColor = computed(() => {
 
 <style scoped>
 .q-btn {
-  border-radius: 8px;
+  border-radius: 16px;
   background-color: v-bind(bgColor);
   padding: 8px 12px;
 }
