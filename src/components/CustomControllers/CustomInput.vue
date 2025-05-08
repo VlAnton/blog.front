@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, defineEmits, defineProps, useAttrs } from 'vue'
+import { computed, defineEmits, defineProps } from 'vue'
 import { QInput } from 'quasar'
 
 type InputProps = {
@@ -9,7 +9,6 @@ type InputProps = {
 }
 
 const props = defineProps<InputProps>()
-const $attrs = useAttrs()
 
 const emit = defineEmits({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
