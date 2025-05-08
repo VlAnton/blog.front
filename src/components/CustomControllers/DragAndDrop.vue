@@ -6,10 +6,6 @@ type DragAndDropProps = {
   modelValue: File | null
 }
 
-interface HTMLInputEvent extends Event {
-  target: HTMLInputElement & EventTarget
-}
-
 const props = defineProps<DragAndDropProps>()
 const emit = defineEmits({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -24,8 +20,14 @@ const file = computed({
   },
 })
 
-const fileInput = ref(null)
+const fileInput = ref<HTMLInputElement | null>(null)
 const isDragging = ref(false)
+
+const handleClick = () => {
+  if (fileInput.value) {
+    fileInput.value.click()
+  }
+}
 
 const handleDragOver = (e: DragEvent) => {
   e.preventDefault()
@@ -49,9 +51,11 @@ const handleDrop = (e: DragEvent) => {
   }
 }
 
-const handleFileSelect = (e: HTMLInputEvent) => {
-  if (e.target && e.target.files) {
-    compressAndSetFile(e.target.files[0], 0.5)
+const handleFileSelect = (e: Event) => {
+  const target = e.target as HTMLInputElement
+  const files = target.files
+  if (files && files.length > 0) {
+    compressAndSetFile(files[0], 0.5)
   }
 }
 
@@ -71,9 +75,14 @@ const compressAndSetFile = async (newFile: File, quality = 1) => {
   ctx!.drawImage(imageBitmap, 0, 0)
 
   // Turn into Blob
-  const blob = await new Promise((resolve) => canvas.toBlob(resolve, newFile.type, quality))
+  const blob: Blob | null = await new Promise((resolve) =>
+    canvas.toBlob(resolve, newFile.type, quality),
+  )
 
   // Turn Blob into File
+  if (!blob) {
+    return
+  }
   file.value = new File([blob], newFile.name, {
     type: blob.type,
   })
@@ -88,14 +97,14 @@ const compressAndSetFile = async (newFile: File, quality = 1) => {
     @dragleave="handleDragLeave"
   >
     <input ref="fileInput" type="file" style="display: none" @change="handleFileSelect" />
-    <div v-if="!file" :class="$style['drop-zone-message']" @click="$refs.fileInput.click()">
+    <div v-if="!file" :class="$style['drop-zone-message']" @click="handleClick">
       <q-icon name="mdi-download-circle" size="32px" style="color: #9264ff" />
       <p class="p3-regular" :class="$style['drop-zone-message-text']">
         Перетащите файл или нажмите на поле, чтобы загрузить
       </p>
     </div>
 
-    <div v-else :class="$style['drop-zone-file']" @click="$refs.fileInput.click()">
+    <div v-else :class="$style['drop-zone-file']" @click="handleClick">
       {{ (file as any).name }} ({{ (file as any).size }} bytes)
     </div>
   </div>

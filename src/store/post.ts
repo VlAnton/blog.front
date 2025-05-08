@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia'
-import type { PostCandidate } from '@/types/post'
+import type { PostCandidate, Post } from '@/types/post'
 import axios from 'axios'
 import type { PostBlockCandidate } from '@/types/post-block'
 import { ref } from 'vue'
 
 export const usePostStore = defineStore('post', () => {
-  const posts = ref([])
+  const posts = ref<Post[]>([])
   const postsTotal = ref(0)
   const currentPostData = ref({
     post: null,
@@ -28,7 +28,7 @@ export const usePostStore = defineStore('post', () => {
   function connectWebSocket() {
     socket.value = new WebSocket('ws://localhost:3001')
 
-    socket.value.onmessage = (event: any) => {
+    socket.value.onmessage = (event: MessageEvent) => {
       const msg = JSON.parse(event.data)
       if (msg.type === 'new_post') {
         posts.value.unshift(msg.payload)
