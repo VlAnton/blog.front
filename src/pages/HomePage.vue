@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import MainPageCard from '@/components/MainPageCard/MainPageCard.vue'
+import MainPageCard from '@/components/MainPageCard.vue'
 import { QPagination } from 'quasar'
 import { PostsController } from '@/controllers/posts-controller'
 import { nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue'

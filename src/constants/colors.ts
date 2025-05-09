@@ -23,5 +23,7 @@ export const BRIGHT_COLORS = [
   'teal',
   'lime',
   'var(--color-lavender)',
-  'var(--color-lavender-swallow)',
+  '--color-lavender',
+  'var(--color-lavender-shallow)',
+  '--color-lavender-shallow',
 ]
