@@ -1,11 +1,14 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { ref, watch, onMounted, onUnmounted, nextTick, reactive } from 'vue'
 import { useRoute } from 'vue-router'
+import { UserController } from '@/controllers/user-controller'
 import NavBarItem from '@/components/NavBar/NavBarTab.vue'
 import CustomButton from '@/components/CustomControllers/CustomButton.vue'
 import RegistrationModal from '@/components/RegistrationModal.vue'
 
 const $route = useRoute()
+
+const controller = reactive(UserController.create())
 
 const tabs = [
   {
@@ -47,8 +50,13 @@ const onScroll = () => {
   }
 }
 
+const onSubmitRegistraion = (email: string, username: string, password: string) => {
+  controller.register(email, password, username)
+}
+
 onMounted(() => {
   document.addEventListener('scroll', onScroll)
+  controller.mount(nextTick)
 })
 
 onUnmounted(() => {
@@ -76,14 +84,21 @@ onUnmounted(() => {
         @click="currentTabId = tab.id"
       />
     </div>
-    <custom-button
-      size="md"
-      color="var(--color-lavender-shallow)"
-      @click="onRegistrationFormOpened()"
-    >
-      Регистрация
-    </custom-button>
-    <registration-modal v-if="registrationFormOpened" @close="onRegistrationFormClosed()" />
+    <div :class="$style['right-menu']">
+      <custom-button
+        v-show="!controller.user"
+        size="md"
+        color="var(--color-lavender-shallow)"
+        @click="onRegistrationFormOpened()"
+      >
+        Регистрация
+      </custom-button>
+      <registration-modal
+        v-if="registrationFormOpened"
+        @close="onRegistrationFormClosed()"
+        @submit="onSubmitRegistraion"
+      />
+    </div>
   </header>
 </template>
 

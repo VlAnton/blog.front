@@ -1,7 +1,6 @@
 import { defineStore } from 'pinia'
-import type { PostCandidate, Post } from '@/types/post'
+import type { PostCandidate, Post, PostBlockCandidate } from '@/types'
 import axios from 'axios'
-import type { PostBlockCandidate } from '@/types/post-block'
 import { ref } from 'vue'
 
 export const usePostStore = defineStore('post', () => {
@@ -56,7 +55,7 @@ export const usePostStore = defineStore('post', () => {
   async function createPost(post: PostCandidate) {
     const formData = new FormData()
     formData.append('title', post.title)
-    formData.append('content', post.content)
+    formData.append('content', await post.content)
     if (post.photo) {
       formData.append('photo', post.photo as Blob)
     }
@@ -69,7 +68,7 @@ export const usePostStore = defineStore('post', () => {
   async function createPostBlock(postBlock: PostBlockCandidate, postId: number | undefined) {
     const formData = new FormData()
     formData.append('title', postBlock.title)
-    formData.append('content', postBlock.content)
+    formData.append('content', await postBlock.content)
     if (postBlock.photo) {
       formData.append('photo', postBlock.photo as Blob)
     }

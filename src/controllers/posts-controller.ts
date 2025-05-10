@@ -1,7 +1,5 @@
 import { usePostStore } from '@/store/post'
-import type { NextTick } from '@/types/controller'
-import type { Post, PostCandidate, PostData } from '@/types/post'
-import type { PostBlockCandidate } from '@/types/post-block'
+import type { Post, PostCandidate, PostData, PostBlockCandidate, NextTick } from '@/types'
 
 export class PostsController {
   private nextTick: NextTick = () => Promise.resolve()

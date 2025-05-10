@@ -10,10 +10,14 @@ const form = reactive({
   password: '',
 })
 
-const emit = defineEmits(['close'])
+const emit = defineEmits(['close', 'submit'])
 
 const submitForm = () => {
-  console.log('Form submitted:', form)
+  emit('submit', form.email, form.password, form.username)
+  form.username = ''
+  form.email = ''
+  form.password = ''
+  emit('close')
 }
 </script>
 

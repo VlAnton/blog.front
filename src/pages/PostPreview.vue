@@ -2,7 +2,7 @@
 import { reactive, nextTick, onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { PostsController } from '@/controllers/posts-controller'
-import type { PostData } from '@/types/post'
+import type { PostData } from '@/types'
 import { BACKEND_URL } from '@/constants/env'
 
 const controller = reactive(PostsController.create())

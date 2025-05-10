@@ -7,7 +7,7 @@ import CustomInput from '@/components/CustomControllers/CustomInput.vue'
 import CustomButton from '@/components/CustomControllers/CustomButton.vue'
 import DragAndDrop from '@/components/CustomControllers/DragAndDrop.vue'
 import { PostsController } from '@/controllers/posts-controller'
-import type { PostBlockCandidate } from '@/types/post-block'
+import { type PostBlockCandidate } from '@/types'
 
 const controller = reactive(PostsController.create())
 
