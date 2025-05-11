@@ -1,22 +1,22 @@
 <script setup lang="ts">
-import { reactive, nextTick, onMounted, ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { PostsController } from '@/controllers/posts-controller'
 import type { PostData } from '@/types'
+import { usePostStore } from '@/store/post'
 import { BACKEND_URL } from '@/constants/env'
 
-const controller = reactive(PostsController.create())
 const route = useRoute()
 const postData = ref<PostData>({
   post: null,
   postBlocks: [],
 })
 
+const postsStore = usePostStore()
+
 onMounted(async () => {
-  await controller.mount(nextTick)
   if (route && typeof route.params.id === 'string') {
-    await controller.getPostById(route.params.id)
-    postData.value = controller.currentPostData
+    await postsStore.fetchPostById(route.params.id)
+    postData.value = postsStore.currentPostData
   }
 })
 </script>

@@ -26,6 +26,7 @@ export class UserController {
 
   async logout() {
     await this.userStore.logout()
+    localStorage.removeItem('user')
     this.user = null
   }
 }

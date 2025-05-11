@@ -6,17 +6,20 @@ import { ref } from 'vue'
 export const usePostStore = defineStore('post', () => {
   const posts = ref<Post[]>([])
   const postsTotal = ref(0)
+  const searchQuery = ref('')
   const currentPostData = ref({
     post: null,
     postBlocks: [],
   })
   const socket = ref<WebSocket | null>(null)
 
-  async function fetchPosts(offset: number = 0) {
+  async function fetchPosts(offset: number = 0, searchStr: string = '') {
+    searchQuery.value = searchStr
     const response = await axios.get('http://localhost:3001/api/posts', {
       params: {
         limit: 6,
         offset,
+        search: searchStr.trim(),
       },
     })
     if (response) {
@@ -46,13 +49,17 @@ export const usePostStore = defineStore('post', () => {
   }
 
   async function fetchPostsTotal() {
-    const response = await axios.get('http://localhost:3001/api/posts/count')
+    const response = await axios.get('http://localhost:3001/api/posts/count', {
+      params: {
+        search: searchQuery.value.trim(),
+      },
+    })
     if (response) {
       postsTotal.value = response.data
     }
   }
 
-  async function createPost(post: PostCandidate) {
+  async function createPost(post: PostCandidate, postBlocks: PostBlockCandidate[]) {
     const formData = new FormData()
     formData.append('title', post.title)
     formData.append('content', await post.content)
@@ -60,9 +67,16 @@ export const usePostStore = defineStore('post', () => {
       formData.append('photo', post.photo as Blob)
     }
     formData.append('isPublished', 'false')
-    return await axios.post('http://localhost:3001/api/posts/', formData, {
+    const res = await axios.post('http://localhost:3001/api/posts/', formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     })
+    if (res) {
+      const postId = res.data.id
+      postBlocks.forEach(async (postBlock) => {
+        await createPostBlock(postBlock, postId)
+      })
+    }
+    return res
   }
 
   async function createPostBlock(postBlock: PostBlockCandidate, postId: number | undefined) {
@@ -84,6 +98,7 @@ export const usePostStore = defineStore('post', () => {
     posts,
     postsTotal,
     currentPostData,
+    searchQuery,
     socket,
     fetchPosts,
     connectWebSocket,
