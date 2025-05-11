@@ -5,7 +5,7 @@ import { UserController } from '@/controllers/user-controller'
 import NavBarItem from '@/components/NavBar/NavBarTab.vue'
 import CustomInput from '@/components/CustomControllers/CustomInput.vue'
 import CustomButton from '@/components/CustomControllers/CustomButton.vue'
-import RegistrationModal from '@/components/RegistrationModal.vue'
+import RegistrationModal from '@/components/Modal/RegistrationModal.vue'
 import { TABS } from '@/constants/tabs'
 import { usePostStore } from '@/store/post'
 
