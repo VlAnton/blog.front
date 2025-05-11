@@ -1,19 +1,19 @@
 <script setup lang="ts">
-import { nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
+import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import MainPageCard from '@/components/MainPageCard.vue'
 import { QPagination } from 'quasar'
 import CustomButton from '@/components/CustomControllers/CustomButton.vue'
-import { UserController } from '@/controllers/user-controller'
 import { usePostStore } from '@/store/post'
+import { useUserStore } from '@/store/user'
 
 const postsStore = usePostStore()
+const userStore = useUserStore()
 
-const usersController = reactive(UserController.create())
 const page = ref(1)
 
 const isLoggedIn = ref(false)
 watch(
-  () => usersController.user,
+  () => userStore.user,
   (newVal) => {
     isLoggedIn.value = !!newVal
   },
@@ -23,9 +23,8 @@ onMounted(async () => {
   await postsStore.fetchPosts()
   await postsStore.fetchPostsTotal()
   postsStore.connectWebSocket()
-  usersController.mount(nextTick)
 
-  isLoggedIn.value = !!usersController.user || !!localStorage.getItem('user')
+  isLoggedIn.value = !!userStore.user || !!localStorage.getItem('user')
 })
 
 watch(page, () => {

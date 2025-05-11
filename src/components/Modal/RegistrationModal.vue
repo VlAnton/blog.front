@@ -22,11 +22,11 @@ const submitRegistrationForm = () => {
   emit(
     'submit-registration',
     refistrationForm.email,
-    refistrationForm.password,
     refistrationForm.username,
+    refistrationForm.password,
   )
-  refistrationForm.username = ''
   refistrationForm.email = ''
+  refistrationForm.username = ''
   refistrationForm.password = ''
   emit('close')
 }
