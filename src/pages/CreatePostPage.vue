@@ -1,19 +1,15 @@
 <script setup lang="ts">
-import { ref, reactive, onMounted, nextTick } from 'vue'
+import { ref, reactive } from 'vue'
 import { QForm } from 'quasar'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
 import CustomInput from '@/components/CustomControllers/CustomInput.vue'
 import CustomButton from '@/components/CustomControllers/CustomButton.vue'
 import DragAndDrop from '@/components/CustomControllers/DragAndDrop.vue'
-import { PostsController } from '@/controllers/posts-controller'
-import type { PostBlockCandidate } from '@/types/post-block'
+import { type PostBlockCandidate } from '@/types'
+import { usePostStore } from '@/store/post'
 
-const controller = reactive(PostsController.create())
-
-onMounted(() => {
-  controller.mount(nextTick)
-})
+const postsStore = usePostStore()
 
 const postTitle = ref('')
 const postContent = ref('')
@@ -24,8 +20,8 @@ const getCompiledMarkdown = (text: string) => {
   return DOMPurify.sanitize(marked.parse(text) as string)
 }
 
-const onSubmitPost = () => {
-  controller.createPost(
+const onSubmitPost = async () => {
+  await postsStore.createPost(
     {
       title: postTitle.value,
       content: getCompiledMarkdown(postContent.value),

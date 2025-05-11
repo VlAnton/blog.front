@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { BACKEND_URL } from '@/constants/env'
-import type { Post } from '@/types/post'
+import type { Post } from '@/types'
 import { defineProps } from 'vue'
 import { useRouter } from 'vue-router'
 

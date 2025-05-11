@@ -1,9 +1,19 @@
 <script setup lang="ts">
 import { QBtn, QIcon, type QBtnProps } from 'quasar'
-import { computed } from 'vue'
+import { computed, useSlots } from 'vue'
 import { DEFALUT_COLORS, BRIGHT_COLORS } from '@/constants/colors'
 
 const props = defineProps<QBtnProps>()
+
+const slots = useSlots()
+const hasSlot = !!slots.default
+const padding = computed(() => {
+  if (hasSlot) {
+    return '8px 12px'
+  }
+  return '8px'
+})
+
 const bgColor = computed(() => {
   if (props.color && (props.color.startsWith('var(') || DEFALUT_COLORS.includes(props.color))) {
     return props.color
@@ -11,7 +21,7 @@ const bgColor = computed(() => {
   return props.color ? `var(${props.color})` : 'var(--color-lavender-accent)'
 })
 const textColor = computed(() => {
-  if (props.color && BRIGHT_COLORS.includes(props.color)) {
+  if (BRIGHT_COLORS.includes(bgColor.value)) {
     return 'var(--color-lavender-accent)'
   }
   return 'var(--color-text-tertiary)'
@@ -56,7 +66,7 @@ const iconColor = computed(() => {
 .q-btn {
   border-radius: 16px;
   background-color: v-bind(bgColor);
-  padding: 8px 12px;
+  padding: v-bind(padding);
 }
 .q-btn * {
   margin: 0;
