@@ -16,13 +16,14 @@ export const useUserStore = defineStore('user', () => {
     })
 
     if (response) {
-      user.value = response.data
+      user.value = response.data.user
       localStorage.setItem('user', JSON.stringify(user.value))
     }
   }
 
   async function logout() {
     user.value = null
+    localStorage.removeItem('user')
   }
 
   async function register(userCandidate: UserCandidate) {

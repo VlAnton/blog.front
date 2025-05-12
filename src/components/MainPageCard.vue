@@ -1,15 +1,21 @@
 <script setup lang="ts">
+import { ref, defineProps, defineEmits } from 'vue'
+import { useRouter } from 'vue-router'
 import { BACKEND_URL } from '@/constants/env'
 import type { Post } from '@/types'
-import { defineProps } from 'vue'
-import { useRouter } from 'vue-router'
+import CustomButton from '@/components/CustomControllers/CustomButton.vue'
+import BaseModal from '@/components/Modal/BaseModal.vue'
 
 type MainPageCardProps = {
   post: Post
+  isUserAdmin: boolean
 }
 
 const $router = useRouter()
 const props = defineProps<MainPageCardProps>()
+const emit = defineEmits(['delete'])
+
+const isModalOpened = ref(false)
 
 const onClick = () => {
   const { id } = props.post
@@ -30,6 +36,33 @@ const onClick = () => {
       :src="`${BACKEND_URL}/static/${props.post.photo}`"
       alt="card photo"
     />
+    <div :class="$style['close-button-wrapper']">
+      <custom-button
+        v-if="props.isUserAdmin"
+        size="sm"
+        icon="close"
+        color="var(--color-lavender)"
+        @click.stop="isModalOpened = true"
+      />
+      <base-modal v-if="isModalOpened" title="Удалить пост?" @close="isModalOpened = false">
+        <template #content>
+          <p class="p3-regular">Вы уверены, что хотите удалить пост "{{ props.post.title }}"?</p>
+          <div :class="$style['modal-buttons']">
+            <custom-button
+              size="lg"
+              color="var(--color-lavender)"
+              style="width: 100%"
+              @click="emit('delete', props.post.id)"
+            >
+              Удалить
+            </custom-button>
+            <custom-button size="lg" @click="isModalOpened = false" style="width: 100%">
+              Отмена
+            </custom-button>
+          </div>
+        </template>
+      </base-modal>
+    </div>
     <div :class="$style['card-body']">
       <h3 class="h3-wide">{{ props.post.title }}</h3>
       <p class="p3-regular" :class="$style['card-body-text']" v-html="props.post.content"></p>
@@ -39,6 +72,7 @@ const onClick = () => {
 
 <style scoped>
 .card-wrapper {
+  position: relative;
   height: 479px;
   border-radius: 24px;
   background-color: var(--color-lavender-shallow);
@@ -77,5 +111,17 @@ const onClick = () => {
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.close-button-wrapper {
+  position: absolute;
+  top: 24px;
+  right: 24px;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
 }
 </style>

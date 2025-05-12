@@ -52,10 +52,6 @@ const onSubmitLogin = (email: string, password: string) => {
 
 onMounted(() => {
   document.addEventListener('scroll', onScroll)
-  const userFromStorage = localStorage.getItem('user')
-  if (userFromStorage) {
-    userStore.user = JSON.parse(userFromStorage)
-  }
 })
 
 onUnmounted(() => {
