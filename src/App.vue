@@ -1,6 +1,17 @@
 <script setup lang="ts">
+import { onMounted } from 'vue'
 import { RouterView } from 'vue-router'
 import NavBar from './components/NavBar/NavBar.vue'
+import { useUserStore } from '@/store/user'
+
+const userStore = useUserStore()
+
+onMounted(() => {
+  const userFromStorage = localStorage.getItem('user')
+  if (userFromStorage) {
+    userStore.user = JSON.parse(userFromStorage)
+  }
+})
 </script>
 
 <template>

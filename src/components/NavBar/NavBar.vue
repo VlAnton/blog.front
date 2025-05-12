@@ -1,17 +1,17 @@
 <script setup lang="ts">
-import { ref, watch, onMounted, onUnmounted, nextTick, reactive } from 'vue'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
-import { UserController } from '@/controllers/user-controller'
 import NavBarItem from '@/components/NavBar/NavBarTab.vue'
 import CustomInput from '@/components/CustomControllers/CustomInput.vue'
 import CustomButton from '@/components/CustomControllers/CustomButton.vue'
-import RegistrationModal from '@/components/RegistrationModal.vue'
+import RegistrationModal from '@/components/Modal/RegistrationModal.vue'
 import { TABS } from '@/constants/tabs'
 import { usePostStore } from '@/store/post'
+import { useUserStore } from '@/store/user'
 
 const $route = useRoute()
 
-const usersController = reactive(UserController.create())
+const userStore = useUserStore()
 const postsStore = usePostStore()
 
 const currentTabId = ref(0)
@@ -44,19 +44,14 @@ const onScroll = () => {
 }
 
 const onSubmitRegistraion = (email: string, username: string, password: string) => {
-  usersController.register(email, password, username)
+  userStore.register({ email, password, username })
 }
 const onSubmitLogin = (email: string, password: string) => {
-  usersController.login(email, password)
+  userStore.login(email, password)
 }
 
 onMounted(() => {
   document.addEventListener('scroll', onScroll)
-  usersController.mount(nextTick)
-  const userFromStorage = localStorage.getItem('user')
-  if (userFromStorage) {
-    usersController.user = JSON.parse(userFromStorage)
-  }
 })
 
 onUnmounted(() => {
@@ -90,14 +85,14 @@ onUnmounted(() => {
       <custom-input
         v-if="$route.path === '/'"
         v-model="searchValue"
-        v-show="!!usersController.user"
+        v-show="!!userStore.user"
         :class="$style['search-input']"
         type="text"
         placeholder="Поиск по постам"
         icon="search"
       />
       <custom-button
-        v-show="!usersController.user"
+        v-show="!userStore.user"
         size="md"
         color="var(--color-lavender-shallow)"
         @click="onRegistrationFormOpened()"
@@ -105,10 +100,10 @@ onUnmounted(() => {
         Войти
       </custom-button>
       <custom-button
-        v-show="!!usersController.user"
+        v-show="!!userStore.user"
         size="md"
         color="var(--color-lavender-shallow)"
-        @click="usersController.logout()"
+        @click="userStore.logout()"
       >
         Выйти
       </custom-button>

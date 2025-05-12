@@ -2,9 +2,9 @@
   "name": "blog.front",
   "version": "0.0.0",
   "private": true,
-  "type": "module",
   "scripts": {
     "dev": "vite",
+    "create-admin": "ts-node ./src/utils/createAdmin.ts",
     "build": "run-p type-check \"build-only {@}\" --",
     "preview": "vite preview",
     "build-only": "vite build",
@@ -35,6 +35,7 @@
     "prettier": "^3.3.3",
     "sass": "^1.81.1",
     "sass-embedded": "^1.81.1",
+    "ts-node": "^10.9.2",
     "typescript": "~5.6.3",
     "vite": "^5.4.10",
     "vue-tsc": "^2.1.10"

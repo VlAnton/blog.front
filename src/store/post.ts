@@ -29,11 +29,13 @@ export const usePostStore = defineStore('post', () => {
 
   function connectWebSocket() {
     socket.value = new WebSocket('ws://localhost:3001')
-
+    // TODO: fetch posts after socket.onmessage (currentPage must be saved)
     socket.value.onmessage = (event: MessageEvent) => {
       const msg = JSON.parse(event.data)
       if (msg.type === 'new_post') {
         posts.value.unshift(msg.payload)
+      } else if (msg.type === 'delete_post') {
+        posts.value = posts.value.filter((post) => post.id !== msg.payload)
       }
     }
     socket.value.onopen = () => console.log('WebSocket подключён')
@@ -94,6 +96,13 @@ export const usePostStore = defineStore('post', () => {
     })
   }
 
+  async function deletePost(postId: number) {
+    const response = await axios.delete(`http://localhost:3001/api/posts/${postId}`)
+    if (response) {
+      posts.value = posts.value.filter((post) => post.id !== postId)
+    }
+  }
+
   return {
     posts,
     postsTotal,
@@ -106,5 +115,6 @@ export const usePostStore = defineStore('post', () => {
     fetchPostsTotal,
     createPost,
     createPostBlock,
+    deletePost,
   }
 })

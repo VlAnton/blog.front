@@ -1,32 +1,33 @@
 <script setup lang="ts">
-import { nextTick, onMounted, onUnmounted, reactive, ref, watch } from 'vue'
+import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import MainPageCard from '@/components/MainPageCard.vue'
 import { QPagination } from 'quasar'
 import CustomButton from '@/components/CustomControllers/CustomButton.vue'
-import { UserController } from '@/controllers/user-controller'
 import { usePostStore } from '@/store/post'
+import { useUserStore } from '@/store/user'
+import { ROLES } from '@/constants/roles'
 
 const postsStore = usePostStore()
+const userStore = useUserStore()
 
-const usersController = reactive(UserController.create())
 const page = ref(1)
 
-const isLoggedIn = ref(false)
-watch(
-  () => usersController.user,
-  (newVal) => {
-    isLoggedIn.value = !!newVal
-  },
-)
+const isUserAdmin = ref(false)
 
 onMounted(async () => {
   await postsStore.fetchPosts()
   await postsStore.fetchPostsTotal()
   postsStore.connectWebSocket()
-  usersController.mount(nextTick)
 
-  isLoggedIn.value = !!usersController.user || !!localStorage.getItem('user')
+  isUserAdmin.value = userStore.user?.roleId === ROLES.ADMIN
 })
+
+watch(
+  () => userStore.user,
+  () => {
+    isUserAdmin.value = userStore.user?.roleId === ROLES.ADMIN
+  },
+)
 
 watch(page, () => {
   nextTick(async () => {
@@ -53,13 +54,19 @@ onUnmounted(() => {
       <p class="p1-regular">
         Здесь располагаются мои посты, вы можете их читать или не читать, как хотите
       </p>
-      <CustomButton v-show="isLoggedIn" size="lg" icon="add" to="/create">
+      <CustomButton v-show="isUserAdmin" size="lg" icon="add" to="/create">
         Создать пост
       </CustomButton>
     </div>
 
     <div v-if="postsStore.postsTotal > 0" :class="$style['page-body']">
-      <main-page-card v-for="post in postsStore.posts" :key="post.id" :post="post" />
+      <main-page-card
+        v-for="post in postsStore.posts"
+        :key="post.id"
+        :post="post"
+        :is-user-admin="isUserAdmin"
+        @delete="postsStore.deletePost(post.id)"
+      />
     </div>
     <div v-if="postsStore.postsTotal === 0" :class="$style['page-body--empty']">
       <h3 class="h3-wide">Постов нет</h3>
@@ -88,8 +95,8 @@ onUnmounted(() => {
 
 <style scoped>
 :deep(.card-wrapper) {
-  flex-basis: calc(33% - 19px);
-  flex-shrink: 0;
+  flex: 1 0 calc(33.333% - 32px);
+  max-width: calc(33.333% - 32px);
 }
 
 :deep(.q-pagination) {
@@ -119,6 +126,25 @@ onUnmounted(() => {
 :deep(.q-focus-helper) {
   opacity: 0 !important;
   background-color: transparent !important;
+}
+
+@media screen and (min-width: 2000px) {
+  :deep(.card-wrapper) {
+    flex: 1 0 calc(25% - 32px);
+    max-width: calc(25% - 32px);
+  }
+}
+@media screen and (max-width: 1200px) {
+  :deep(.card-wrapper) {
+    flex: 1 0 calc(50% - 32px);
+    max-width: calc(50% - 32px);
+  }
+}
+@media screen and (max-width: 486px) {
+  :deep(.card-wrapper) {
+    flex: 1 0 100%;
+    max-width: 100%;
+  }
 }
 </style>
 
