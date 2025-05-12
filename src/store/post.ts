@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
-import type { PostCandidate, Post, PostBlockCandidate } from '@/types'
 import axios from 'axios'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
+import type { PostCandidate, Post, PostBlockCandidate } from '@/types'
 
 export const usePostStore = defineStore('post', () => {
   const posts = ref<Post[]>([])
@@ -11,14 +11,22 @@ export const usePostStore = defineStore('post', () => {
     post: null,
     postBlocks: [],
   })
+  const currentPage = ref(1)
   const socket = ref<WebSocket | null>(null)
 
-  async function fetchPosts(offset: number = 0, searchStr: string = '') {
+  watch(currentPage, async () => {
+    await fetchPosts(searchQuery.value)
+  })
+  watch(searchQuery, async () => {
+    await fetchPosts(searchQuery.value)
+  })
+
+  async function fetchPosts(searchStr: string = '') {
     searchQuery.value = searchStr
     const response = await axios.get('http://localhost:3001/api/posts', {
       params: {
         limit: 6,
-        offset,
+        offset: (currentPage.value - 1) * 6,
         search: searchStr.trim(),
       },
     })
@@ -29,13 +37,12 @@ export const usePostStore = defineStore('post', () => {
 
   function connectWebSocket() {
     socket.value = new WebSocket('ws://localhost:3001')
-    // TODO: fetch posts after socket.onmessage (currentPage must be saved)
-    socket.value.onmessage = (event: MessageEvent) => {
+    socket.value.onmessage = async (event: MessageEvent) => {
       const msg = JSON.parse(event.data)
       if (msg.type === 'new_post') {
-        posts.value.unshift(msg.payload)
+        await fetchPosts()
       } else if (msg.type === 'delete_post') {
-        posts.value = posts.value.filter((post) => post.id !== msg.payload)
+        await fetchPosts()
       }
     }
     socket.value.onopen = () => console.log('WebSocket подключён')
@@ -108,6 +115,7 @@ export const usePostStore = defineStore('post', () => {
     postsTotal,
     currentPostData,
     searchQuery,
+    currentPage,
     socket,
     fetchPosts,
     connectWebSocket,

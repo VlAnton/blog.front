@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
+import { onMounted, onUnmounted, ref, watch } from 'vue'
 import MainPageCard from '@/components/MainPageCard.vue'
 import { QPagination } from 'quasar'
 import CustomButton from '@/components/CustomControllers/CustomButton.vue'
@@ -9,8 +9,6 @@ import { ROLES } from '@/constants/roles'
 
 const postsStore = usePostStore()
 const userStore = useUserStore()
-
-const page = ref(1)
 
 const isUserAdmin = ref(false)
 
@@ -26,19 +24,6 @@ watch(
   () => userStore.user,
   () => {
     isUserAdmin.value = userStore.user?.roleId === ROLES.ADMIN
-  },
-)
-
-watch(page, () => {
-  nextTick(async () => {
-    await postsStore.fetchPosts((page.value - 1) * 6, postsStore.searchQuery)
-  })
-})
-
-watch(
-  () => postsStore.searchQuery,
-  () => {
-    postsStore.fetchPostsTotal()
   },
 )
 
@@ -77,7 +62,7 @@ onUnmounted(() => {
 
     <div v-if="postsStore.postsTotal > 0" :class="$style['pagination-wrapper']">
       <q-pagination
-        v-model="page"
+        v-model="postsStore.currentPage"
         active-color="white"
         active-text-color="white"
         text-color="black"
