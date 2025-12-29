@@ -6,12 +6,11 @@ defineProps<{ title: string }>()
 </script>
 
 <template>
-  <div :class="$style.overlay" @click.stop.self="emit('close')">
-    <div :class="$style['registration-modal']">
-      <div :class="$style['modal-header']">
+  <div class="overlay" @click.stop.self="emit('close')">
+    <div class="registration-modal">
+      <div class="registration-modal__header">
         <h3 class="h3-wide">{{ title }}</h3>
         <CustomButton
-          :class="$style['close-button']"
           icon="close"
           @click.stop="emit('close')"
           size="sm"
@@ -22,7 +21,7 @@ defineProps<{ title: string }>()
   </div>
 </template>
 
-<style module>
+<style scoped lang="scss">
 .overlay {
   position: fixed;
   top: 0;
@@ -45,11 +44,11 @@ defineProps<{ title: string }>()
   border-radius: 16px;
   box-shadow: var(--shadow-medium);
   width: 400px;
-}
 
-.modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 }
 </style>

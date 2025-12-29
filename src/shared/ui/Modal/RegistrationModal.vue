@@ -64,7 +64,7 @@ const submitLoginForm = () => {
             placeholder="Введите ваш пароль"
             required
           />
-          <CustomButton :class="$style['registration-button']" type="submit">
+          <CustomButton class="registration-button" type="submit">
             Зарегистрироваться
           </CustomButton>
           <p class="p3-regular" style="text-align: center">
@@ -80,7 +80,7 @@ const submitLoginForm = () => {
         </QForm>
       </template>
     </BaseModal>
-    <!-- </div> -->
+
     <BaseModal v-else title="Вход" @close="emit('close')">
       <template #content>
         <QForm @submit.prevent="submitLoginForm">
@@ -98,7 +98,7 @@ const submitLoginForm = () => {
             placeholder="Введите ваш пароль"
             required
           />
-          <CustomButton :class="$style['registration-button']" type="submit"> Войти </CustomButton>
+          <CustomButton class="registration-button" type="submit"> Войти </CustomButton>
           <p class="p3-regular" style="text-align: center">
             У меня нет аккаунта
             <span
@@ -116,16 +116,14 @@ const submitLoginForm = () => {
 </template>
 
 <style scoped>
+.registration-button {
+  margin-top: 16px;
+  width: 100%;
+}
+
 :deep(.q-form) {
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
-</style>
-
-<style module>
-.registration-button {
-  margin-top: 16px;
-  width: 100%;
 }
 </style>

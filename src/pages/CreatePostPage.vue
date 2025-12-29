@@ -28,34 +28,32 @@ const onSubmitPost = async () => {
 
 <template>
   <div class="page">
-    <div class="page-header">
+    <div class="page__header">
       <h1 class="h1-wide">Создание поста</h1>
     </div>
 
-    <div :class="$style['page-body']">
-      <div :class="$style['creation-forms']">
-        <QForm type="submit" :class="$style['creation-form']" @submit="onSubmitPost">
-          <CustomInput
-            v-model="postTitle"
-            custom-label="Название поста"
-            clearable
-            on-white-background
-          />
-          <CustomInput
-            v-model="postContent"
-            custom-label="Текст поста"
-            clearable
-            type="textarea"
-            on-white-background
-          />
-          <CustomButton :disable="!postTitle || !postContent" type="submit" align="left" icon="add">
-            Создать пост
-          </CustomButton>
-        </QForm>
-      </div>
+    <div class="page__body">
+      <QForm type="submit" class="page__body__creation-form" @submit="onSubmitPost">
+        <CustomInput
+          v-model="postTitle"
+          custom-label="Название поста"
+          clearable
+          on-white-background
+        />
+        <CustomInput
+          v-model="postContent"
+          custom-label="Текст поста"
+          clearable
+          type="textarea"
+          on-white-background
+        />
+        <CustomButton :disable="!postTitle || !postContent" type="submit" align="left" icon="add">
+          Создать пост
+        </CustomButton>
+      </QForm>
 
-      <div :class="$style.preview">
-        <div :class="$style['preview-block']">
+      <div class="page__body__preview">
+        <div class="page__body__preview__block">
           <h1 class="h1-wide">
             {{ postTitle }}
           </h1>
@@ -66,49 +64,38 @@ const onSubmitPost = async () => {
   </div>
 </template>
 
-<style module>
-.creation-forms,
-.creation-form {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  min-width: 451px;
-}
+<style scoped lang="scss">
+.page {
+  &__body {
+    padding: 0 48px;
+    margin-bottom: 48px;
+    display: flex;
+    gap: 32px;
 
-.creation-form:not(:last-child) {
-  border-bottom: 1px solid var(--color-lavender-accent);
-  padding-bottom: 24px;
-}
+    &__creation-form {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+      min-width: 451px;
+    }
 
-.page-body {
-  padding: 0 48px;
-  margin-bottom: 48px;
-  display: flex;
-  gap: 32px;
-}
+    &__preview {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 64px;
+      padding: 24px;
+      border-radius: 24px;
+      background-color: var(--color-lavender-shallow);
 
-.preview {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 64px;
-  padding: 24px;
-  border-radius: 24px;
-  background-color: var(--color-lavender-shallow);
-}
-
-.preview-block {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  align-items: center;
-}
-
-.post-photo {
-  width: 50%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 24px;
+      &__block {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        align-items: center;
+      }
+    }
+  }
 }
 </style>

@@ -34,7 +34,7 @@ onUnmounted(() => {
 
 <template>
   <div class="page">
-    <div class="page-header">
+    <div class="page__header">
       <h1 class="h1-wide">Главная</h1>
       <p class="p1-regular">
         Здесь располагаются мои посты, вы можете их читать или не читать, как хотите
@@ -44,7 +44,7 @@ onUnmounted(() => {
       </CustomButton>
     </div>
 
-    <div v-if="postsStore.postsTotal > 0" :class="$style['page-body']">
+    <div v-if="postsStore.postsTotal > 0" class="page__body">
       <MainPageCard
         v-for="post in postsStore.posts"
         :key="post.id"
@@ -53,14 +53,14 @@ onUnmounted(() => {
         @delete="postApi.deletePost(post.id!)"
       />
     </div>
-    <div v-if="postsStore.postsTotal === 0" :class="$style['page-body--empty']">
+    <div v-if="postsStore.postsTotal === 0" class="page__body page__body--empty">
       <h3 class="h3-wide">Постов нет</h3>
       <p class="p3-regular">
         Постов нет, но вы можете создать свой собственный пост, нажав на кнопку "Создать пост"
       </p>
     </div>
 
-    <div v-if="postsStore.postsTotal > 0" :class="$style['pagination-wrapper']">
+    <div v-if="postsStore.postsTotal > 0" class="page__pagination-wrapper">
       <QPagination
         v-model="postsStore.currentPage"
         active-color="white"
@@ -78,7 +78,30 @@ onUnmounted(() => {
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+.page {
+  &__body {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 32px;
+    padding: 40px 48px;
+
+    &--empty {
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: var(--color-text-primary);
+    }
+  }
+
+  &__pagination-wrapper {
+    position: sticky;
+    bottom: 40px;
+    padding: 0 48px;
+  }
+}
+
+
 :deep(.card-wrapper) {
   flex: 1 0 calc(33.333% - 32px);
   max-width: calc(33.333% - 32px);
@@ -130,28 +153,5 @@ onUnmounted(() => {
     flex: 1 0 100%;
     max-width: 100%;
   }
-}
-</style>
-
-<style module>
-.page-body,
-.page-body--empty {
-  display: flex;
-  gap: 32px;
-  flex-wrap: wrap;
-  padding: 40px 48px;
-}
-
-.page-body--empty {
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: var(--color-text-primary);
-}
-
-.pagination-wrapper {
-  position: sticky;
-  bottom: 40px;
-  padding: 0 48px;
 }
 </style>

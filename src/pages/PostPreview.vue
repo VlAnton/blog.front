@@ -16,9 +16,9 @@ onMounted(async () => {
 
 <template>
   <div class="page">
-    <div :class="$style['page-body-wrapper']">
-      <div :class="$style['page-body']">
-        <section :class="$style['page-section']">
+    <div class="page__body">
+      <div class="page__body__container">
+        <section class="page__body__container__section">
           <h1 class="h1-wide">{{ post?.title }}</h1>
           <div class="p1-regular" v-html="post?.contentHtml" />
         </section>
@@ -27,25 +27,27 @@ onMounted(async () => {
   </div>
 </template>
 
-<style module>
-.page-body-wrapper {
+<style scoped lang="scss">
+.page {
   padding: 40px 40px 0;
-}
 
-.page-body {
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-  background-color: var(--color-lavender-shallow);
-  padding: 24px;
-  border-radius: 24px 24px 0 0;
-  min-height: calc(100vh - 88px - 40px);
-}
+  &__body {
+    &__container {
+      display: flex;
+      flex-direction: column;
+      gap: 60px;
+      background-color: var(--color-lavender-shallow);
+      padding: 24px;
+      border-radius: 24px 24px 0 0;
+      min-height: calc(100vh - 88px - 40px);
 
-.page-section {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  align-items: start;
+      &__section {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        align-items: start;
+      }
+    }
+  }
 }
 </style>
