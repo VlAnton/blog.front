@@ -5,7 +5,7 @@ import '@quasar/extras/mdi-v6/mdi-v6.css'
 import 'quasar/src/css/index.sass'
 import quasarLang from 'quasar/lang/ru'
 
-import '@/assets/css/main.css'
+import '@/shared/assets/css/main.css'
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'

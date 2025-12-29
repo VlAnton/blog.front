@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { RouterView } from 'vue-router'
-import NavBar from '@/widgets/NavBar/NavBar.vue'
+import { NavBar } from '@/widgets/NavBar'
 import { useUserStore } from '@/entities/user'
 
 const userStore = useUserStore()

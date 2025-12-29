@@ -1,19 +1,52 @@
-import pluginVue from 'eslint-plugin-vue'
-import vueTsEslintConfig from '@vue/eslint-config-typescript'
-import skipFormatting from '@vue/eslint-config-prettier/skip-formatting'
+import antfu from '@antfu/eslint-config'
 
-export default [
+export default antfu(
   {
-    name: 'app/files-to-lint',
-    files: ['**/*.{ts,mts,tsx,vue}'],
+    vue: {
+      overrides: {
+        'vue/max-attributes-per-line': [
+          'error',
+          {
+            singleline: {
+              max: 1,
+            },
+            multiline: {
+              max: 1,
+            },
+          },
+        ],
+      },
+    },
+    typescript: true,
+    stylistic: {
+      quotes: 'single',
+      overrides: {
+        'style/space-before-function-paren': ['error', 'always'],
+        curly: ['error', 'multi-line'],
+        'style/max-statements-per-line': 'off',
+        'style/brace-style': ['error', '1tbs', { allowSingleLine: true }],
+      },
+    },
   },
-
   {
-    name: 'app/files-to-ignore',
-    ignores: ['**/dist/**', '**/dist-ssr/**', '**/coverage/**'],
+    rules: {
+      'perfectionist/sort-imports': [
+        'error',
+        {
+          internalPattern: ['^@/.+'],
+          newlinesBetween: 'always',
+        },
+      ],
+      'vue/no-irregular-whitespace': 'off',
+      'no-irregular-whitespace': 'off',
+    },
+    languageOptions: {
+      globals: {
+        APP_VERSION: true,
+      },
+    },
   },
-
-  ...pluginVue.configs['flat/essential'],
-  ...vueTsEslintConfig(),
-  skipFormatting,
-]
+  {
+    ignores: ['public/'],
+  },
+)

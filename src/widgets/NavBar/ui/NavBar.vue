@@ -68,7 +68,7 @@ onUnmounted(() => {
   >
     <div :class="$style['left-menu']">
       <RouterLink to="/">
-        <img :class="$style.logo" src="@/assets/images/logo.svg" alt="logo" />
+        <img :class="$style.logo" src="@/shared/assets/images/svgs/logo.svg" alt="logo" />
       </RouterLink>
       <div :class="$style.tabs">
         <NavBarItem
