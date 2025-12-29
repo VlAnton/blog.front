@@ -43,7 +43,7 @@ const iconColor = computed(() => {
 <template>
   <q-btn v-bind="{ ...props, icon: undefined }" flat :ripple="false">
     <template #default>
-      <div v-if="props.icon" :class="$style['icon-wrapper']">
+      <div v-if="props.icon" class="icon-wrapper">
         <q-icon :name="props.icon" />
       </div>
       <slot />
@@ -51,18 +51,16 @@ const iconColor = computed(() => {
   </q-btn>
 </template>
 
-<style module>
+<style scoped lang="scss">
 .icon-wrapper {
   border-radius: 100%;
   background-color: v-bind(iconWrapperColor);
+
+  & * {
+    color: v-bind(iconColor);
+  }
 }
 
-.icon-wrapper * {
-  color: v-bind(iconColor);
-}
-</style>
-
-<style scoped>
 .q-btn {
   border-radius: 16px;
   background-color: v-bind(bgColor);

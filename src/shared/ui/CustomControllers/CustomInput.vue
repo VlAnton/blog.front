@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, defineEmits, defineProps } from 'vue'
+import { computed } from 'vue'
 import { QInput } from 'quasar'
 
 type InputProps = {
@@ -31,7 +31,7 @@ const bgColor = computed(() => {
 </script>
 
 <template>
-  <div :class="$style['input-wrapper']">
+  <div class="input-wrapper">
     <p v-if="props.customLabel" class="p3-regular" style="color: var(--color-text-primary)">
       {{ props.customLabel }}
     </p>
@@ -50,15 +50,13 @@ const bgColor = computed(() => {
   </div>
 </template>
 
-<style module>
+<style scoped lang="scss">
 .input-wrapper {
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
-</style>
 
-<style scoped>
 :deep(.q-field--outlined .q-field__control) {
   border-radius: 12px;
 }

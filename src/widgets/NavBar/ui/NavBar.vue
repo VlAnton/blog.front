@@ -61,16 +61,16 @@ onUnmounted(() => {
 
 <template>
   <header
+    class="header"
     :class="{
-      [$style.header]: true,
-      [$style['header-shadowed']]: isScrollActive,
+      'header--shadow': isScrollActive,
     }"
   >
-    <div :class="$style['left-menu']">
+    <div class="header__left-menu">
       <RouterLink to="/">
-        <img :class="$style.logo" src="@/assets/images/logo.svg" alt="logo" />
+        <img class="header__logo" src="@/shared/assets/images/svgs/logo.svg" alt="logo" />
       </RouterLink>
-      <div :class="$style.tabs">
+      <div class="header__tabs">
         <NavBarItem
           v-for="tab in TABS"
           :key="tab.id"
@@ -81,12 +81,12 @@ onUnmounted(() => {
         />
       </div>
     </div>
-    <div :class="$style['right-menu']">
+    <div class="header__right-menu">
       <CustomInput
         v-if="$route.path === '/'"
         v-model="searchValue"
         v-show="!!userStore.user"
-        :class="$style['search-input']"
+        class="header__search-input"
         type="text"
         placeholder="Поиск по постам"
         icon="search"
@@ -117,7 +117,7 @@ onUnmounted(() => {
   </header>
 </template>
 
-<style module>
+<style scoped lang="scss">
 .header {
   position: sticky;
   top: 0;
@@ -129,28 +129,28 @@ onUnmounted(() => {
   align-items: baseline;
   justify-content: space-between;
   transition: all ease-out 0.2s;
-}
 
-.header-shadowed {
-  box-shadow: var(--shadow-medium);
-  transition: all ease-in 0.2s;
-}
+  &--shadow {
+    box-shadow: var(--shadow-medium);
+    transition: all ease-in 0.2s;
+  }
 
-.left-menu {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 8vw;
-}
+  &__left-menu {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8vw;
+  }
 
-.right-menu {
-  display: flex;
-  align-items: center;
-  gap: 32px;
-}
+  &__right-menu {
+    display: flex;
+    align-items: center;
+    gap: 32px;
+  }
 
-.tabs {
-  display: flex;
-  gap: 32px;
+  &__tabs {
+    display: flex;
+    gap: 32px;
+  }
 }
 </style>

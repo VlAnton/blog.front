@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { QIcon } from 'quasar'
-import { computed, defineEmits, defineProps, ref } from 'vue'
+import { computed, ref } from 'vue'
 
 type DragAndDropProps = {
   modelValue: File | null
@@ -8,7 +8,6 @@ type DragAndDropProps = {
 
 const props = defineProps<DragAndDropProps>()
 const emit = defineEmits({
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   'update:modelValue': (value: string) => true,
 })
 const file = computed({
@@ -64,7 +63,6 @@ const compressAndSetFile = async (newFile: File, quality = 1) => {
     return
   }
   const imageBitmap = await createImageBitmap(newFile)
-  // Draw to canvas
   const canvas = document.createElement('canvas')
   canvas.width = imageBitmap.width
   canvas.height = imageBitmap.height
@@ -74,12 +72,10 @@ const compressAndSetFile = async (newFile: File, quality = 1) => {
   }
   ctx!.drawImage(imageBitmap, 0, 0)
 
-  // Turn into Blob
   const blob: Blob | null = await new Promise((resolve) =>
     canvas.toBlob(resolve, newFile.type, quality),
   )
 
-  // Turn Blob into File
   if (!blob) {
     return
   }
@@ -91,26 +87,26 @@ const compressAndSetFile = async (newFile: File, quality = 1) => {
 
 <template>
   <div
-    :class="$style['drop-zone-wrapper']"
+    class="drop-zone-wrapper"
     @dragover="handleDragOver"
     @drop="handleDrop"
     @dragleave="handleDragLeave"
   >
     <input ref="fileInput" type="file" style="display: none" @change="handleFileSelect" />
-    <div v-if="!file" :class="$style['drop-zone-message']" @click="handleClick">
+    <div v-if="!file" class="drop-zone-wrapper__message" @click="handleClick">
       <q-icon name="mdi-download-circle" size="32px" style="color: #9264ff" />
-      <p class="p3-regular" :class="$style['drop-zone-message-text']">
+      <p class="drop-zone-wrapper__message__text p3-regular">
         Перетащите файл или нажмите на поле, чтобы загрузить
       </p>
     </div>
 
-    <div v-else :class="$style['drop-zone-file']" @click="handleClick">
+    <div v-else class="drop-zone-wrapper__file" @click="handleClick">
       {{ (file as any).name }} ({{ (file as any).size }} bytes)
     </div>
   </div>
 </template>
 
-<style module>
+<style scoped lang="scss">
 .drop-zone-wrapper {
   padding: 10px 16px;
   border-radius: 12px;
@@ -118,26 +114,26 @@ const compressAndSetFile = async (newFile: File, quality = 1) => {
   border: 1px solid var(--color-lavender);
   background-color: var(--color-lavender-shallow);
   transition: border-color ease-out 0.2s;
-}
 
-.drop-zone-wrapper:hover {
-  border: 1px solid var(--color-lavender-accent);
-  transition: border-color ease-in 0.2s;
-}
+  &:hover {
+    border: 1px solid var(--color-lavender-accent);
+    transition: border-color ease-in 0.2s;
+  }
 
-.drop-zone-message {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  align-items: center;
-}
+  &__message {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
 
-.drop-zone-message-text {
-  color: var(--color-text-primary);
-  text-align: center;
-}
+    &__text {
+      color: var(--color-text-primary);
+      text-align: center;
+    }
+  }
 
-.drop-zone-file {
-  height: 100%;
+  &__file {
+    height: 100%;
+  }
 }
 </style>
