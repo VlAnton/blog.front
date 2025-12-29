@@ -1,53 +1,28 @@
 <script setup lang="ts">
-import { ref, reactive } from 'vue'
+import { ref } from 'vue'
 import { QForm } from 'quasar'
 import { marked } from 'marked'
 import DOMPurify from 'dompurify'
-import CustomInput from '@/components/CustomControllers/CustomInput.vue'
-import CustomButton from '@/components/CustomControllers/CustomButton.vue'
-import DragAndDrop from '@/components/CustomControllers/DragAndDrop.vue'
-import { type PostBlockCandidate } from '@/types'
-import { usePostStore } from '@/store/post'
-
-const postsStore = usePostStore()
+import CustomInput from '@/shared/ui/CustomControllers/CustomInput.vue'
+import CustomButton from '@/shared/ui/CustomControllers/CustomButton.vue'
+import { postApi } from '@/entities/post'
+import { useRouter } from 'vue-router'
 
 const postTitle = ref('')
 const postContent = ref('')
-const postFile = ref(null)
-const postBlocks = reactive<PostBlockCandidate[]>([])
+
+const router = useRouter()
 
 const getCompiledMarkdown = (text: string) => {
   return DOMPurify.sanitize(marked.parse(text) as string)
 }
 
 const onSubmitPost = async () => {
-  await postsStore.createPost(
-    {
-      title: postTitle.value,
-      content: getCompiledMarkdown(postContent.value),
-      photo: postFile.value,
-    },
-    postBlocks.map((block: PostBlockCandidate) => ({
-      title: block.title,
-      content: getCompiledMarkdown(block.content as string),
-      photo: block.photo,
-    })),
-  )
-}
-
-const onAddNewBlock = () => {
-  postBlocks.push({
-    title: '',
-    content: '',
-    photo: null,
+  await postApi.createPost({
+    title: postTitle.value,
+    contentText: postContent.value,
   })
-}
-
-const getFilePreviewUrl = (file: File | null) => {
-  if (!file) {
-    return ''
-  }
-  return URL.createObjectURL(file)
+  router.push({ name: 'home' })
 }
 </script>
 
@@ -59,95 +34,32 @@ const getFilePreviewUrl = (file: File | null) => {
 
     <div :class="$style['page-body']">
       <div :class="$style['creation-forms']">
-        <q-form type="submit" :class="$style['creation-form']" @submit="onSubmitPost">
-          <drag-and-drop v-model="postFile" />
-          <custom-input
+        <QForm type="submit" :class="$style['creation-form']" @submit="onSubmitPost">
+          <CustomInput
             v-model="postTitle"
             custom-label="Название поста"
             clearable
             on-white-background
           />
-          <custom-input
+          <CustomInput
             v-model="postContent"
             custom-label="Текст поста"
             clearable
             type="textarea"
             on-white-background
           />
-          <custom-button
-            :disable="!postTitle || !postContent"
-            type="submit"
-            align="left"
-            icon="add"
-          >
+          <CustomButton :disable="!postTitle || !postContent" type="submit" align="left" icon="add">
             Создать пост
-          </custom-button>
-          <custom-button
-            v-if="postBlocks.length === 0"
-            :disable="!postTitle || !postContent"
-            align="left"
-            icon="add"
-            color="var(--color-lavender)"
-            @click="onAddNewBlock"
-          >
-            Добавить новый блок
-          </custom-button>
-        </q-form>
-        <q-form
-          v-for="(postBlock, index) in postBlocks"
-          :key="index"
-          type="submit"
-          :class="$style['creation-form']"
-        >
-          <drag-and-drop v-model="postBlock.photo" />
-          <custom-input
-            v-model="postBlock.title"
-            custom-label="Название поста"
-            clearable
-            on-white-background
-          />
-          <custom-input
-            v-model="postBlock.content as string"
-            custom-label="Текст поста"
-            clearable
-            type="textarea"
-            on-white-background
-          />
-          <custom-button
-            v-if="!postBlocks[index + 1]"
-            :disable="!postBlock.title || !postBlock.content"
-            align="left"
-            icon="add"
-            color="var(--color-lavender)"
-            @click="onAddNewBlock"
-          >
-            Добавить новый блок
-          </custom-button>
-        </q-form>
+          </CustomButton>
+        </QForm>
       </div>
 
       <div :class="$style.preview">
         <div :class="$style['preview-block']">
-          <img v-if="postFile" :class="$style['post-photo']" :src="getFilePreviewUrl(postFile)" />
           <h1 class="h1-wide">
             {{ postTitle }}
           </h1>
           <div class="p1-regular" v-html="getCompiledMarkdown(postContent)"></div>
-        </div>
-        <div
-          v-for="(postBlock, index) in postBlocks"
-          :key="`${postBlock.title}-${index}`"
-          :class="$style['preview-block']"
-        >
-          <img
-            v-if="postBlock.photo"
-            :class="$style['post-photo']"
-            :src="getFilePreviewUrl(postBlock.photo)"
-          />
-          <h1 class="h1-wide">
-            {{ postBlock.title }}
-          </h1>
-          <p class="p1-regular" v-html="getCompiledMarkdown(postBlock.content as string)"></p>
         </div>
       </div>
     </div>

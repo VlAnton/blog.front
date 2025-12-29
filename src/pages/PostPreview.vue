@@ -1,23 +1,16 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
-import type { PostData } from '@/types'
-import { usePostStore } from '@/store/post'
-import { BACKEND_URL } from '@/constants/env'
+import type { Post } from '@/shared/types'
+import { postApi } from '@/entities/post'
 
-const route = useRoute()
-const postData = ref<PostData>({
-  post: null,
-  postBlocks: [],
-})
+const props = defineProps<{
+  postId: string
+}>()
 
-const postsStore = usePostStore()
+const post = ref<Post | null>(null)
 
 onMounted(async () => {
-  if (route && typeof route.params.id === 'string') {
-    await postsStore.fetchPostById(route.params.id)
-    postData.value = postsStore.currentPostData
-  }
+  post.value = (await postApi.fetchPostById(props.postId)).post ?? null
 })
 </script>
 
@@ -26,28 +19,8 @@ onMounted(async () => {
     <div :class="$style['page-body-wrapper']">
       <div :class="$style['page-body']">
         <section :class="$style['page-section']">
-          <img
-            v-if="postData.post?.photo"
-            :class="$style.photo"
-            :src="`${BACKEND_URL}/static/${postData.post?.photo}`"
-            alt="card photo"
-          />
-          <h1 class="h1-wide">{{ postData.post?.title }}</h1>
-          <p class="p1-regular" v-html="postData.post?.content"></p>
-        </section>
-        <section
-          v-for="postBlock in postData.postBlocks"
-          :key="postBlock.id"
-          :class="$style['page-section']"
-        >
-          <img
-            v-if="postBlock.photo"
-            :class="$style.photo"
-            :src="`${BACKEND_URL}/static/${postBlock?.photo}`"
-            alt="card photo"
-          />
-          <h1 class="h1-wide">{{ postBlock?.title }}</h1>
-          <p class="p1-regular" v-html="postBlock.content"></p>
+          <h1 class="h1-wide">{{ post?.title }}</h1>
+          <div class="p1-regular" v-html="post?.contentHtml" />
         </section>
       </div>
     </div>
@@ -56,8 +29,7 @@ onMounted(async () => {
 
 <style module>
 .page-body-wrapper {
-  padding: 40px 48px;
-  margin-bottom: 48px;
+  padding: 40px 40px 0;
 }
 
 .page-body {
@@ -66,19 +38,14 @@ onMounted(async () => {
   gap: 60px;
   background-color: var(--color-lavender-shallow);
   padding: 24px;
-  border-radius: 24px;
+  border-radius: 24px 24px 0 0;
+  min-height: calc(100vh - 88px - 40px);
 }
 
 .page-section {
   display: flex;
   flex-direction: column;
   gap: 24px;
-  align-items: center;
-}
-
-.photo {
-  width: 50%;
-  object-fit: cover;
-  border-radius: 24px;
+  align-items: start;
 }
 </style>
